@@ -127,7 +127,8 @@ export const api = {
         200: z.object({
           whatYouDidWithLove: z.string(),
           microHabit: z.string(),
-          loveReminder: z.string()
+          loveReminder: z.string(),
+          teamRitual: z.string()
         })
       }
     }

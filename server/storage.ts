@@ -11,24 +11,24 @@ export interface IStorage {
 
 export class DatabaseStorage implements IStorage {
   async getConversations(): Promise<Conversation[]> {
-    return await db.select().from(conversations);
+    return db.select().from(conversations).all();
   }
 
   async getConversation(id: number): Promise<Conversation | undefined> {
-    const [conv] = await db.select().from(conversations).where(eq(conversations.id, id));
-    return conv;
+    return db.select().from(conversations).where(eq(conversations.id, id)).get();
   }
 
   async createConversation(insertConversation: InsertConversation): Promise<Conversation> {
-    const [conv] = await db.insert(conversations).values(insertConversation).returning();
+    const [conv] = db.insert(conversations).values(insertConversation).returning().all();
     return conv;
   }
 
   async updateConversation(id: number, updates: Partial<InsertConversation>): Promise<Conversation> {
-    const [conv] = await db.update(conversations)
+    const [conv] = db.update(conversations)
       .set(updates)
       .where(eq(conversations.id, id))
-      .returning();
+      .returning()
+      .all();
     return conv;
   }
 }

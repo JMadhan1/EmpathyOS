@@ -3,14 +3,14 @@ import type { Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// NOTE: using Replit AI Integrations OpenAI client
-// It will auto-authenticate using Replit's environment credentials
-const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-});
+const API_KEY = process.env.GEMINI_API_KEY;
+const genAI = API_KEY ? new GoogleGenerativeAI(API_KEY) : null;
+
+if (!genAI) {
+  console.warn("GEMINI_API_KEY not found. AI features will be disabled.");
+}
 
 const SYSTEM_PROMPT = `
 You are EmpathyOS, an AI micro-coach for difficult workplace conversations.
@@ -30,11 +30,25 @@ Rules:
 5. Tone: Like a trusted coach who believes in both love AND accountability
 `;
 
+const model = genAI?.getGenerativeModel({
+  model: "gemini-flash-latest",
+  systemInstruction: SYSTEM_PROMPT,
+  generationConfig: { responseMimeType: "application/json" }
+});
+
+async function callAI(prompt: string): Promise<string> {
+  if (!model) {
+    throw new Error("AI is not configured. Please set GEMINI_API_KEY in your .env file.");
+  }
+  const result = await model.generateContent(prompt);
+  return result.response.text();
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  
+
   // Storage Routes
   app.post(api.conversations.create.path, async (req, res) => {
     try {
@@ -78,7 +92,7 @@ export async function registerRoutes(
   app.post(api.ai.clarify.path, async (req, res) => {
     try {
       const data = api.ai.clarify.input.parse(req.body);
-      
+
       const prompt = `
 The user is preparing for a difficult workplace conversation.
 
@@ -95,16 +109,8 @@ Return JSON with exactly this schema:
   "emotionalContext": "Brief insight into the other person's likely emotional state and what they need"
 }`;
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: prompt }
-        ],
-        response_format: { type: "json_object" }
-      });
-
-      const result = JSON.parse(response.choices[0].message?.content || "{}");
+      const text = await callAI(prompt);
+      const result = JSON.parse(text);
       res.json(result);
     } catch (error) {
       console.error("AI Error:", error);
@@ -115,7 +121,7 @@ Return JSON with exactly this schema:
   app.post(api.ai.draft.path, async (req, res) => {
     try {
       const { draftText, context } = api.ai.draft.input.parse(req.body);
-      
+
       const prompt = `
 The user has written a draft message/talking points for a difficult workplace conversation.
 
@@ -137,16 +143,8 @@ Return JSON with exactly this schema:
   ]
 }`;
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: prompt }
-        ],
-        response_format: { type: "json_object" }
-      });
-
-      const result = JSON.parse(response.choices[0].message?.content || "{}");
+      const text = await callAI(prompt);
+      const result = JSON.parse(text);
       res.json(result);
     } catch (error) {
       console.error("AI Error:", error);
@@ -157,7 +155,7 @@ Return JSON with exactly this schema:
   app.post(api.ai.anticipate.path, async (req, res) => {
     try {
       const { context, draft } = api.ai.anticipate.input.parse(req.body);
-      
+
       const prompt = `
 Based on this workplace conversation context:
 
@@ -191,16 +189,8 @@ Return JSON with exactly this schema:
   ]
 }`;
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: prompt }
-        ],
-        response_format: { type: "json_object" }
-      });
-
-      const result = JSON.parse(response.choices[0].message?.content || "{}");
+      const text = await callAI(prompt);
+      const result = JSON.parse(text);
       res.json(result);
     } catch (error) {
       console.error("AI Error:", error);
@@ -211,7 +201,7 @@ Return JSON with exactly this schema:
   app.post(api.ai.reflect.path, async (req, res) => {
     try {
       const { whatHappened, surprise, proud, different, context } = api.ai.reflect.input.parse(req.body);
-      
+
       const prompt = `
 The user just had a difficult workplace conversation and is reflecting on it.
 
@@ -225,19 +215,12 @@ Return JSON with exactly this schema:
 {
   "whatYouDidWithLove": "Specific affirmation of 1-2 loving behaviors they demonstrated",
   "microHabit": "One small specific behavior change to practice next time — make it concrete and actionable",
-  "loveReminder": "A short powerful principle from Love as a Strategy that applies to their situation"
+  "loveReminder": "A short powerful principle from Love as a Strategy that applies to their situation",
+  "teamRitual": "A specific, low-cost activity the user can do with their team to fix the root cause of the conflict and build culture"
 }`;
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: prompt }
-        ],
-        response_format: { type: "json_object" }
-      });
-
-      const result = JSON.parse(response.choices[0].message?.content || "{}");
+      const text = await callAI(prompt);
+      const result = JSON.parse(text);
       res.json(result);
     } catch (error) {
       console.error("AI Error:", error);
