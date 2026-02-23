@@ -123,9 +123,9 @@ Return JSON with exactly this schema:
       const text = await callAI(prompt);
       const result = JSON.parse(text);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Error:", error);
-      res.status(500).json({ message: "Failed to generate coaching insight." });
+      res.status(500).json({ message: error.message || "Failed to generate coaching insight." });
     }
   });
 
@@ -157,9 +157,9 @@ Return JSON with exactly this schema:
       const text = await callAI(prompt);
       const result = JSON.parse(text);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Error:", error);
-      res.status(500).json({ message: "Failed to coach the draft." });
+      res.status(500).json({ message: error.message || "Failed to coach the draft." });
     }
   });
 
@@ -203,9 +203,9 @@ Return JSON with exactly this schema:
       const text = await callAI(prompt);
       const result = JSON.parse(text);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Error:", error);
-      res.status(500).json({ message: "Failed to anticipate reactions." });
+      res.status(500).json({ message: error.message || "Failed to anticipate reactions." });
     }
   });
 
@@ -233,9 +233,9 @@ Return JSON with exactly this schema:
       const text = await callAI(prompt);
       const result = JSON.parse(text);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Error:", error);
-      res.status(500).json({ message: "Failed to generate reflection." });
+      res.status(500).json({ message: error.message || "Failed to generate reflection." });
     }
   });
 
