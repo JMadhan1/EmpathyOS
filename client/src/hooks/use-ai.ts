@@ -15,7 +15,7 @@ function parseWithLogging<T>(schema: z.ZodSchema<T>, data: unknown, label: strin
 
 export function useClarify() {
   const { toast } = useToast();
-  
+
   return useMutation({
     mutationFn: async (data: z.infer<typeof api.ai.clarify.input>) => {
       const validated = api.ai.clarify.input.parse(data);
@@ -24,8 +24,11 @@ export function useClarify() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(validated),
       });
-      
-      if (!res.ok) throw new Error("Failed to clarify thoughts");
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to clarify thoughts");
+      }
       const json = await res.json();
       return parseWithLogging(api.ai.clarify.responses[200], json, "ai.clarify");
     },
@@ -41,7 +44,7 @@ export function useClarify() {
 
 export function useDraft() {
   const { toast } = useToast();
-  
+
   return useMutation({
     mutationFn: async (data: z.infer<typeof api.ai.draft.input>) => {
       const validated = api.ai.draft.input.parse(data);
@@ -50,8 +53,11 @@ export function useDraft() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(validated),
       });
-      
-      if (!res.ok) throw new Error("Failed to generate draft");
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to generate draft");
+      }
       const json = await res.json();
       return parseWithLogging(api.ai.draft.responses[200], json, "ai.draft");
     },
@@ -67,7 +73,7 @@ export function useDraft() {
 
 export function useAnticipate() {
   const { toast } = useToast();
-  
+
   return useMutation({
     mutationFn: async (data: z.infer<typeof api.ai.anticipate.input>) => {
       const validated = api.ai.anticipate.input.parse(data);
@@ -76,8 +82,11 @@ export function useAnticipate() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(validated),
       });
-      
-      if (!res.ok) throw new Error("Failed to anticipate reactions");
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to anticipate reactions");
+      }
       const json = await res.json();
       return parseWithLogging(api.ai.anticipate.responses[200], json, "ai.anticipate");
     },
@@ -93,7 +102,7 @@ export function useAnticipate() {
 
 export function useReflect() {
   const { toast } = useToast();
-  
+
   return useMutation({
     mutationFn: async (data: z.infer<typeof api.ai.reflect.input>) => {
       const validated = api.ai.reflect.input.parse(data);
@@ -102,8 +111,11 @@ export function useReflect() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(validated),
       });
-      
-      if (!res.ok) throw new Error("Failed to process reflection");
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to process reflection");
+      }
       const json = await res.json();
       return parseWithLogging(api.ai.reflect.responses[200], json, "ai.reflect");
     },
