@@ -55,18 +55,20 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-          className="flex flex-col sm:flex-row items-center gap-4"
+          className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center"
         >
           <Link 
             href="/chat" 
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-primary-foreground bg-primary shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
+            className="w-full sm:w-80 px-8 py-5 rounded-2xl font-bold text-xl text-primary-foreground bg-primary shadow-2xl shadow-primary/40 hover:shadow-primary/60 hover:-translate-y-1 active:scale-95 transition-all duration-300 flex items-center justify-center gap-3"
+            data-testid="button-start-conversation"
           >
             Start a Conversation
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-6 h-6" />
           </Link>
           <Link 
             href="/chat?demo=true" 
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-foreground bg-card border-2 border-border shadow-md hover:border-primary/30 hover:bg-accent/50 hover:-translate-y-0.5 transition-all duration-300"
+            className="w-full sm:w-80 px-8 py-5 rounded-2xl font-bold text-xl text-foreground bg-card border-2 border-border shadow-lg hover:border-primary/40 hover:bg-accent/50 hover:-translate-y-1 active:scale-95 transition-all duration-300 flex items-center justify-center"
+            data-testid="button-try-demo"
           >
             Try Interactive Demo
           </Link>

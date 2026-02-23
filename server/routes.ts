@@ -12,24 +12,23 @@ const openai = new OpenAI({
   baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
 });
 
-const SYSTEM_PROMPT = `You are EmpathyOS, an AI micro-coach for difficult workplace conversations.
-You are grounded in the "Love as a Strategy" framework, which treats love as a serious business strategy built on:
+const SYSTEM_PROMPT = `
+You are EmpathyOS, an AI micro-coach for difficult workplace conversations.
+You are grounded in the Love as a Strategy framework built on:
 - Empathy & Understanding
-- Respect & Psychological Safety
+- Respect & Psychological Safety  
 - Courageous Honesty
 - Shared Purpose & Trust
 - Vulnerability & Openness
 - Accountability with Care
 
-Your role is to:
-1. Help people prepare for difficult conversations with love, courage, and clarity
-2. Never replace the human conversation — only augment the human's ability to show up well
-3. Always prioritize human dignity, mutual respect, and relationship health
-4. Be warm, direct, and practical — not preachy or generic
-5. Give specific, actionable coaching — not vague affirmations
-
-Tone: Warm, wise, direct. Like a trusted coach who believes in both love AND accountability.
-Format: Always return valid JSON matching the exact schema requested.`;
+Rules:
+1. Always return valid JSON matching the exact schema requested
+2. Be warm, direct, and practical — not preachy or generic
+3. Give specific actionable coaching — not vague affirmations
+4. Never replace the human conversation — only augment the human's ability to show up well
+5. Tone: Like a trusted coach who believes in both love AND accountability
+`;
 
 export async function registerRoutes(
   httpServer: Server,
@@ -78,20 +77,23 @@ export async function registerRoutes(
   // AI Routes
   app.post(api.ai.clarify.path, async (req, res) => {
     try {
-      const { scenario, situation, goal, worry, otherFeeling } = api.ai.clarify.input.parse(req.body);
+      const data = api.ai.clarify.input.parse(req.body);
       
-      const prompt = `A user is preparing for a difficult conversation.
-Scenario: ${scenario}
-Situation: ${situation}
-Goal: ${goal}
-Worry: ${worry}
-Other Person's Feeling: ${otherFeeling}
+      const prompt = `
+The user is preparing for a difficult workplace conversation.
 
-Analyze this situation and provide:
-1. "reframedIntent": The user's goal reframed with love and empathy.
-2. "blindSpot": One empathy blind spot the user should watch out for.
-3. "emotionalContext": A brief note on the other person's likely emotional state.
-Respond in JSON format.`;
+Scenario type: ${data.scenario}
+Situation: ${data.situation}
+Goal: ${data.goal}
+Worry: ${data.worry}
+How the other person might be feeling: ${data.otherFeeling}
+
+Return JSON with exactly this schema:
+{
+  "reframedIntent": "A loving, clear reframe of their goal in 1-2 sentences",
+  "blindSpot": "One specific empathy blind spot they might be missing",
+  "emotionalContext": "Brief insight into the other person's likely emotional state and what they need"
+}`;
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -114,18 +116,26 @@ Respond in JSON format.`;
     try {
       const { draftText, context } = api.ai.draft.input.parse(req.body);
       
-      const prompt = `Context:
+      const prompt = `
+The user has written a draft message/talking points for a difficult workplace conversation.
+
+Context:
 Scenario: ${context.scenario}
 Situation: ${context.situation}
 Goal: ${context.goal}
 
-User's Draft Message:
-"${draftText}"
+Their draft:
+${draftText}
 
-Provide:
-1. "coachedVersion": A rewritten version of the message using the Love as a Strategy framework.
-2. "coachingNotes": An array of 2-3 notes explaining the changes. Each note must have an "emoji" and a short "note" string (e.g. "Replaced blame with ownership").
-Respond in JSON format.`;
+Return JSON with exactly this schema:
+{
+  "coachedVersion": "A rewritten version of their draft that keeps their core message but adds empathy, removes blame, adds psychological safety, and aligns with Love as a Strategy. Keep it natural and human — not robotic.",
+  "coachingNotes": [
+    {"emoji": "💛", "note": "Short specific note about what was changed and why"},
+    {"emoji": "🛡️", "note": "Short specific note about what was changed and why"},
+    {"emoji": "🎯", "note": "Short specific note about what was changed and why"}
+  ]
+}`;
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -148,19 +158,38 @@ Respond in JSON format.`;
     try {
       const { context, draft } = api.ai.anticipate.input.parse(req.body);
       
-      const prompt = `Context:
+      const prompt = `
+Based on this workplace conversation context:
+
+Scenario: ${context.scenario}
 Situation: ${context.situation}
-Other Person's Feeling: ${context.otherFeeling}
-Message to deliver: "${draft}"
+Coached message: ${draft}
 
-Simulate 3 likely emotional reactions from the other person.
-For each reaction, provide:
-- "type": The reaction type (e.g., Defensive, Anxious, Relieved)
-- "emoji": An appropriate emoji
-- "theyMight": What they might say or feel (1-2 sentences)
-- "respondWith": A 1-2 sentence coaching tip on how to respond with love.
+Simulate 3 realistic emotional reactions the other person might have.
 
-Return a JSON object with a "reactions" array.`;
+Return JSON with exactly this schema:
+{
+  "reactions": [
+    {
+      "type": "Defensive",
+      "emoji": "😤",
+      "theyMight": "What they might say or feel internally in 1-2 sentences",
+      "respondWith": "How to respond with love and boundaries in 1-2 sentences"
+    },
+    {
+      "type": "Anxious but Open",
+      "emoji": "😟",
+      "theyMight": "What they might say or feel internally in 1-2 sentences",
+      "respondWith": "How to respond with love and boundaries in 1-2 sentences"
+    },
+    {
+      "type": "Relieved",
+      "emoji": "😌",
+      "theyMight": "What they might say or feel internally in 1-2 sentences",
+      "respondWith": "How to respond with love and boundaries in 1-2 sentences"
+    }
+  ]
+}`;
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -183,19 +212,21 @@ Return a JSON object with a "reactions" array.`;
     try {
       const { whatHappened, surprise, proud, different, context } = api.ai.reflect.input.parse(req.body);
       
-      const prompt = `Context of original situation: ${context.situation}
+      const prompt = `
+The user just had a difficult workplace conversation and is reflecting on it.
 
-Reflection Notes:
+Original situation: ${context.situation}
 What happened: ${whatHappened}
 What surprised them: ${surprise}
-What they are proud of: ${proud}
-What they would do differently: ${different}
+What they're proud of: ${proud}
+What they'd do differently: ${different}
 
-Provide a reflection insight JSON with:
-1. "whatYouDidWithLove": Affirmation of positive behavior.
-2. "microHabit": One small, specific behavior change for next time.
-3. "loveReminder": One short quote/principle from the Love as a Strategy framework.
-`;
+Return JSON with exactly this schema:
+{
+  "whatYouDidWithLove": "Specific affirmation of 1-2 loving behaviors they demonstrated",
+  "microHabit": "One small specific behavior change to practice next time — make it concrete and actionable",
+  "loveReminder": "A short powerful principle from Love as a Strategy that applies to their situation"
+}`;
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",

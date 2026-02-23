@@ -132,24 +132,31 @@ export function ConversationFlow() {
     setShowConfetti(true);
     
     // Save to DB
-    saveMut.mutate({
-      scenario: state.scenario, situation: state.situation,
-      goal: state.goal, worry: state.worry, otherFeeling: state.otherFeeling,
-      reframedIntent: state.clarifyResult?.reframedIntent,
-      blindSpot: state.clarifyResult?.blindSpot,
-      emotionalContext: state.clarifyResult?.emotionalContext,
-      draftText: state.draftText,
-      coachedVersion: state.draftResult?.coachedVersion,
-      coachingNotes: state.draftResult?.coachingNotes,
-      reactions: state.anticipateResult?.reactions,
-      reflectionWhatHappened: state.whatHappened,
-      reflectionSurprise: state.surprise,
-      reflectionProud: state.proud,
-      reflectionDifferent: state.different,
-      reflectionWhatYouDidWithLove: result.whatYouDidWithLove,
-      reflectionMicroHabit: result.microHabit,
-      reflectionLoveReminder: result.loveReminder
-    });
+    try {
+      await saveMut.mutateAsync({
+        scenario: state.scenario,
+        situation: state.situation,
+        goal: state.goal,
+        worry: state.worry,
+        otherFeeling: state.otherFeeling,
+        reframedIntent: state.clarifyResult?.reframedIntent,
+        blindSpot: state.clarifyResult?.blindSpot,
+        emotionalContext: state.clarifyResult?.emotionalContext,
+        draftText: state.draftText,
+        coachedVersion: state.draftResult?.coachedVersion,
+        coachingNotes: state.draftResult?.coachingNotes,
+        reactions: state.anticipateResult?.reactions,
+        reflectionWhatHappened: state.whatHappened,
+        reflectionSurprise: state.surprise,
+        reflectionProud: state.proud,
+        reflectionDifferent: state.different,
+        reflectionWhatYouDidWithLove: result.whatYouDidWithLove,
+        reflectionMicroHabit: result.microHabit,
+        reflectionLoveReminder: result.loveReminder
+      });
+    } catch (e) {
+      console.error("Failed to save conversation:", e);
+    }
   };
 
   const updateState = (key: keyof ConversationState, value: any) => {
