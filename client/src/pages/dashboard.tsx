@@ -38,7 +38,7 @@ export default function Dashboard() {
                     <span className="font-serif font-semibold text-xl tracking-tight text-foreground">EmpathyOS</span>
                 </Link>
                 <div className="flex items-center gap-4">
-                    <span className="text-xs font-bold text-primary px-3 py-1 rounded-full bg-primary/10">Organization Intelligence</span>
+                    <span className="hidden sm:inline-block text-xs font-bold text-primary px-3 py-1 rounded-full bg-primary/10">Organization Intelligence</span>
                     <Link href="/chat" className="text-sm font-bold text-foreground hover:underline">Launch Coach</Link>
                     <button
                         onClick={() => {
@@ -58,14 +58,14 @@ export default function Dashboard() {
                     Back to home
                 </Link>
 
-                <header className="mb-12">
-                    <h1 className="text-4xl font-serif font-semibold text-foreground mb-3">Culture Dashboard</h1>
-                    <p className="text-muted-foreground text-lg">Measuring Love as a Strategy across your organization.</p>
+                <header className="mb-8 md:mb-12">
+                    <h1 className="text-3xl md:text-4xl font-serif font-semibold text-foreground mb-3">Culture Dashboard</h1>
+                    <p className="text-muted-foreground text-base md:text-lg">Measuring Love as a Strategy across your organization.</p>
                 </header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                     {/* Summary Cards */}
-                    <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="lg:col-span-3 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                         {[
                             { label: "Empathy Pulse", value: "84%", trend: "+12%", icon: <Heart className="w-5 h-5 text-primary" /> },
                             { label: "Psych Safety", value: "72", trend: "+8", icon: <ShieldCheck className="w-5 h-5 text-blue-500" /> },

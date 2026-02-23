@@ -58,7 +58,7 @@ export default function Home() {
       <main className="relative z-10 flex-1 max-w-7xl mx-auto px-6 pt-16 pb-32 landing-content">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Column: Text Content */}
-          <div className="text-left space-y-8">
+          <div className="text-center lg:text-left space-y-6 md:space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -82,7 +82,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-              className="text-lg md:text-xl text-muted-foreground max-w-xl text-balance leading-relaxed"
+              className="text-base md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 text-balance leading-relaxed"
             >
               EmpathyOS is the human layer of your tech stack, coaching your team to lead with love, courage, and clarity.
             </motion.p>
@@ -91,7 +91,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-              className="flex flex-col sm:flex-row items-center gap-4 w-full"
+              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 w-full"
             >
               <Link
                 href="/chat"
@@ -114,7 +114,7 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-wrap gap-4 pt-4"
+              className="flex flex-wrap gap-3 md:gap-4 pt-4 justify-center lg:justify-start"
             >
               {pillars.slice(0, 3).map((p, i) => (
                 <span key={i} className="pillar-tag !m-0">{p}</span>

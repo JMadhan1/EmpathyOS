@@ -51,7 +51,13 @@ export async function registerRoutes(
 
   // Health check
   app.get("/api/health", (_req, res) => {
-    res.json({ status: "ok", aiConfigured: !!genAI });
+    res.json({
+      status: "ok",
+      aiConfigured: !!genAI,
+      env: process.env.NODE_ENV,
+      hasApiKey: !!process.env.GEMINI_API_KEY,
+      platform: process.platform
+    });
   });
 
   // Storage Routes

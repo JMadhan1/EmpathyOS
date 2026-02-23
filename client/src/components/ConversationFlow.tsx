@@ -188,7 +188,7 @@ export function ConversationFlow() {
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setLocation("/")}>
           <HeartPulse className="w-5 h-5 text-primary" />
-          <span className="font-serif font-semibold">EmpathyOS</span>
+          <span className="font-serif font-semibold text-base md:text-xl">EmpathyOS</span>
         </div>
         <div className="flex items-center gap-2">
           {stepTitles.map((title, i) => (
@@ -225,12 +225,12 @@ export function ConversationFlow() {
               <div className="bg-card p-6 sm:p-8 rounded-3xl border border-border shadow-sm space-y-8">
                 <div>
                   <label className="block text-sm font-semibold mb-3">What kind of conversation is this?</label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                     {scenarios.map(sc => (
                       <button
                         key={sc}
                         onClick={() => updateState("scenario", sc)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border-2 
+                        className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 border-2 
                           ${state.scenario === sc
                             ? 'border-primary bg-primary/10 text-foreground'
                             : 'border-border bg-transparent text-muted-foreground hover:border-primary/30 hover:bg-accent/50'}`}
@@ -319,8 +319,8 @@ export function ConversationFlow() {
                     </div>
                   </div>
 
-                  <div className="pt-6 flex justify-end">
-                    <button onClick={handleNextStep} className="px-8 py-3 rounded-xl font-semibold bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                  <div className="pt-6 flex justify-center sm:justify-end">
+                    <button onClick={handleNextStep} className="w-full sm:w-auto px-8 py-3 rounded-xl font-semibold bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
                       Continue to Draft <ArrowRight className="w-5 h-5" />
                     </button>
                   </div>
@@ -357,11 +357,11 @@ export function ConversationFlow() {
                   value={state.draftText}
                   onChange={e => updateState("draftText", e.target.value)}
                 />
-                <div className="flex justify-end">
+                <div className="flex justify-center sm:justify-end">
                   <button
                     disabled={!state.draftText || draftMut.isPending}
                     onClick={runDraft}
-                    className="px-6 py-3 rounded-xl font-semibold bg-foreground text-background shadow-lg hover:bg-foreground/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold bg-foreground text-background shadow-lg hover:bg-foreground/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {draftMut.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 text-secondary" />}
                     Coach this Draft
