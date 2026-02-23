@@ -161,19 +161,21 @@ export default function Dashboard() {
                             </ResponsiveContainer>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
-                                <div className="flex items-center gap-2 mb-2">
+                            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 relative overflow-hidden">
+                                <Heart className="absolute -bottom-2 -right-2 w-12 h-12 text-primary opacity-5 animate-pulse" />
+                                <div className="flex items-center gap-2 mb-2 relative z-10">
                                     <Brain className="w-4 h-4 text-primary" />
                                     <h4 className="text-sm font-bold">Manager Insight</h4>
                                 </div>
-                                <p className="text-xs text-muted-foreground">The 30-day upward trend correlates with the rollout of EmpathyOS micro-coaching sessions after project retrospectives.</p>
+                                <p className="text-xs text-muted-foreground relative z-10">The 30-day upward trend correlates with the rollout of EmpathyOS micro-coaching sessions after project retrospectives.</p>
                             </div>
-                            <div className="p-4 rounded-xl bg-secondary/5 border border-secondary/10">
-                                <div className="flex items-center gap-2 mb-2">
+                            <div className="p-4 rounded-xl bg-secondary/5 border border-secondary/10 relative overflow-hidden">
+                                <Heart className="absolute -bottom-2 -right-2 w-12 h-12 text-secondary opacity-5 animate-pulse" />
+                                <div className="flex items-center gap-2 mb-2 relative z-10">
                                     <Target className="w-4 h-4 text-secondary" />
                                     <h4 className="text-sm font-bold">Action Item</h4>
                                 </div>
-                                <p className="text-xs text-muted-foreground">Consider a group training on 'Courageous Honesty' as it remains the lowest scoring pillar.</p>
+                                <p className="text-xs text-muted-foreground relative z-10">Consider a group training on 'Courageous Honesty' as it remains the lowest scoring pillar.</p>
                             </div>
                         </div>
                     </motion.div>

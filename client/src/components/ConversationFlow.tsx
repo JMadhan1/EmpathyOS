@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { HeartPulse, ArrowLeft, ArrowRight, Loader2, CheckCircle2, MessageSquare, Shield, Sparkles, Send, Mail, Users2 } from "lucide-react";
+import { HeartPulse, ArrowLeft, ArrowRight, Loader2, CheckCircle2, MessageSquare, Shield, Sparkles, Send, Mail, Users2, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { TextareaAuto } from "./ui/textarea-auto";
 import { useClarify, useDraft, useAnticipate, useReflect } from "@/hooks/use-ai";
@@ -297,9 +297,12 @@ export function ConversationFlow() {
                   animate={{ opacity: 1, height: "auto" }}
                   className="glass-card p-8 rounded-3xl space-y-6 bg-gradient-to-br from-card to-accent/20"
                 >
-                  <h3 className="text-xl font-serif font-semibold border-b border-border pb-4 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-primary" />
-                    Coach's Perspective
+                  <h3 className="text-xl font-serif font-semibold border-b border-border pb-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="w-5 h-5 text-primary" />
+                      Coach's Perspective
+                    </div>
+                    <Heart className="w-5 h-5 text-rose-400 animate-pulse fill-rose-400/20" />
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
@@ -380,8 +383,11 @@ export function ConversationFlow() {
                     </div>
                     {/* Coached */}
                     <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-6 rounded-3xl border border-emerald-100 dark:border-emerald-900/50 shadow-md">
-                      <h4 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" /> Recommended Approach
+                      <h4 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-4 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-emerald-600">
+                          <CheckCircle2 className="w-4 h-4" /> Recommended Approach
+                        </div>
+                        <Heart className="w-4 h-4 text-rose-400 fill-rose-400/20" />
                       </h4>
                       <p className="text-foreground leading-relaxed font-medium">{state.draftResult.coachedVersion}</p>
                       <div className="mt-6 flex gap-3">
@@ -468,9 +474,12 @@ export function ConversationFlow() {
                       const color = colors[i % colors.length];
                       return (
                         <div key={i} className={`p-6 rounded-3xl border shadow-sm ${color} flex flex-col`}>
-                          <div className="flex items-center gap-2 mb-4">
-                            <span className="text-2xl bg-white/50 dark:bg-black/20 p-2 rounded-xl">{r.emoji}</span>
-                            <h4 className="font-bold uppercase tracking-wider text-xs opacity-80">{r.type}</h4>
+                          <div className="flex items-center justify-between gap-2 mb-4">
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl bg-white/50 dark:bg-black/20 p-2 rounded-xl">{r.emoji}</span>
+                              <h4 className="font-bold uppercase tracking-wider text-xs opacity-80">{r.type}</h4>
+                            </div>
+                            <Heart className="w-3 h-3 text-rose-400 fill-rose-400/10" />
                           </div>
                           <div className="flex-1 space-y-4">
                             <div>
@@ -583,9 +592,12 @@ export function ConversationFlow() {
                   </div>
 
                   <div className="relative z-10 space-y-8">
-                    <div>
-                      <h4 className="text-xs font-bold text-primary uppercase tracking-wider mb-2">What you did with love</h4>
-                      <p className="text-xl font-serif text-foreground leading-relaxed">{state.reflectResult.whatYouDidWithLove}</p>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h4 className="text-xs font-bold text-primary uppercase tracking-wider mb-2">What you did with love</h4>
+                        <p className="text-xl font-serif text-foreground leading-relaxed">{state.reflectResult.whatYouDidWithLove}</p>
+                      </div>
+                      <Heart className="w-8 h-8 text-rose-400 fill-rose-400/20 animate-bounce mt-2" />
                     </div>
 
                     <div className="bg-white/50 dark:bg-black/20 p-6 rounded-2xl border border-white/20">

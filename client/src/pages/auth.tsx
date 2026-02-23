@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { HeartPulse, ShieldCheck, ArrowRight, Lock } from "lucide-react";
+import { HeartPulse, ShieldCheck, ArrowRight, Lock, Heart } from "lucide-react";
 
 export default function AuthPage() {
     const [, setLocation] = useLocation();
@@ -28,8 +28,9 @@ export default function AuthPage() {
                 className="w-full max-w-md"
             >
                 <div className="flex flex-col items-center text-center mb-10">
-                    <div className="bg-primary/10 p-4 rounded-3xl shadow-lg shadow-primary/5 mb-6">
-                        <HeartPulse className="w-12 h-12 text-primary" />
+                    <div className="bg-primary/10 p-4 rounded-3xl shadow-lg shadow-primary/5 mb-6 relative group">
+                        <HeartPulse className="w-12 h-12 text-primary relative z-10" />
+                        <Heart className="absolute -top-2 -right-2 w-6 h-6 text-rose-400 fill-rose-400/20 animate-pulse group-hover:scale-110 transition-transform" />
                     </div>
                     <h1 className="text-3xl font-serif font-semibold text-foreground mb-2">Secure Organization Access</h1>
                     <p className="text-muted-foreground">Sign in to view Empathy Metrics & Org Intelligence</p>
