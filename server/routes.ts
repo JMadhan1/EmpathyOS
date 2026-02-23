@@ -49,6 +49,11 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
 
+  // Health check
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok", aiConfigured: !!genAI });
+  });
+
   // Storage Routes
   app.post(api.conversations.create.path, async (req, res) => {
     try {
