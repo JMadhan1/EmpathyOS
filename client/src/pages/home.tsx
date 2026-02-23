@@ -75,7 +75,7 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
               className="text-5xl md:text-7xl font-serif font-semibold text-foreground leading-[1.1] text-balance"
             >
-              Have the conversation that <span className="text-primary italic">matters.</span>
+              The Future of Work isn't AI. <span className="text-primary italic text-[0.8em] md:text-[0.7em] block mt-2">It's AI with a Heart.</span>
             </motion.h1>
 
             <motion.p
@@ -84,7 +84,7 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
               className="text-lg md:text-xl text-muted-foreground max-w-xl text-balance leading-relaxed"
             >
-              EmpathyOS coaches you to speak with love, courage, and clarity — before, during, and after the moments that count in your workplace.
+              EmpathyOS is the human layer of your tech stack, coaching your team to lead with love, courage, and clarity.
             </motion.p>
 
             <motion.div
