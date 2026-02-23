@@ -1,0 +1,189 @@
+Build a full-stack web application called "EmpathyOS" — an AI-powered micro-coach for difficult workplace conversations, grounded in the "Love as a Strategy" framework.
+
+=== TECH STACK ===
+- Frontend: Pure HTML, CSS, JavaScript (no frameworks)
+- Backend: Python Flask
+- LLM: OpenAI API (GPT-4o) via Flask backend
+- No database needed for demo (use session/localStorage)
+
+=== PROJECT STRUCTURE ===
+empathyos/
+├── app.py                  # Flask backend
+├── prompts.py              # All LLM system prompts
+├── requirements.txt
+├── static/
+│   ├── style.css
+│   └── script.js
+└── templates/
+    └── index.html
+
+=== CORE CONCEPT ===
+EmpathyOS helps employees and managers prepare for and reflect on difficult workplace conversations using AI coaching grounded in empathy, respect, courageous honesty, and shared purpose (Love as a Strategy pillars).
+
+The app has ONE main conversation flow with 4 steps:
+Step 1 – CLARIFY: User describes the situation, goal, and fears
+Step 2 – DRAFT: User writes what they want to say; AI returns a coached version
+Step 3 – ANTICIPATE: AI simulates 3 likely emotional reactions from the other person + loving responses
+Step 4 – REFLECT: After the conversation, user logs what happened; AI gives micro-learning insight
+
+=== FRONTEND (index.html + style.css + script.js) ===
+
+Design language:
+- Warm, human, calm — NOT corporate blue/grey
+- Color palette: deep warm navy (#1a1a2e), soft coral (#e94560), warm cream (#f5f0e8), muted gold (#c9a84c)
+- Font: Google Fonts — "Inter" for body, "Playfair Display" for headings
+- Soft card shadows, rounded corners (16px), generous whitespace
+- Subtle gradient backgrounds
+- Smooth CSS transitions between steps (fade + slide up)
+- Fully responsive (mobile-first)
+- NO frameworks — pure CSS Grid and Flexbox
+
+Pages/Sections (all in one HTML page, shown/hidden via JS):
+
+1. LANDING SECTION
+   - Logo: a small heart + brain icon (use emoji 🧠❤️ styled)
+   - Headline: "Have the conversation that matters."
+   - Subheadline: "EmpathyOS coaches you to speak with love, courage, and clarity — before and after the moments that count."
+   - CTA button: "Start a Conversation" → goes to Step 1
+   - Subtle animated background: soft floating circles (CSS keyframes)
+
+2. STEP 1 – CLARIFY (card UI)
+   - Progress bar at top: Step 1 of 4 highlighted
+   - Heading: "What conversation are you preparing for?"
+   - Scenario selector (styled pill buttons, not a dropdown):
+     * Giving tough feedback
+     * Addressing a conflict
+     * Saying no / setting a boundary
+     * Asking for help or support
+     * Upward feedback to my manager
+     * Custom situation
+   - Text inputs:
+     * "Describe the situation briefly" (textarea)
+     * "What do you want to achieve?" (textarea)
+     * "What are you most worried about?" (textarea)
+     * "How might the other person be feeling right now?" (textarea)
+   - Button: "Get My Coaching Insight →"
+   - On submit: POST to /api/clarify → show AI response in a styled "insight card" below
+   - Insight card shows:
+     * "Your Intent (Reframed with Love):" — AI's loving reframe of their goal
+     * "Blind Spot to Watch:" — one empathy blind spot the AI noticed
+     * "Emotional Context:" — brief note on the other person's likely emotional state
+   - Button: "Continue to Draft →" → Step 2
+
+3. STEP 2 – DRAFT (card UI)
+   - Heading: "What do you want to say?"
+   - Subheading: "Write your message or talking points. Don't worry about being perfect — that's what we're here for."
+   - Large textarea: "Write your draft here..."
+   - Button: "Coach My Words →"
+   - On submit: POST to /api/draft → show side-by-side comparison
+   - Side-by-side layout (CSS Grid, 2 columns on desktop, stacked on mobile):
+     * LEFT card (light red tint): "Your Original" — user's text
+     * RIGHT card (light green tint): "Coached Version" — AI rewrite
+   - Below the comparison, show 2–3 highlighted "coaching notes":
+     * Each note has an emoji icon + short explanation
+     * e.g. "💛 Replaced blame language with ownership" / "🛡️ Added psychological safety opener" / "🎯 Clarified shared purpose"
+   - Button: "See How They Might React →" → Step 3
+
+4. STEP 3 – ANTICIPATE (card UI)
+   - Heading: "How might they respond?"
+   - Subheading: "Understanding their possible reactions helps you stay grounded and loving — no matter what happens."
+   - On load (auto-call /api/anticipate using previous context): show 3 reaction cards
+   - Each reaction card:
+     * Emoji + Reaction type (e.g. "😤 Defensive", "😟 Anxious but open", "😌 Relieved")
+     * "They might say or feel:" — 1–2 sentences
+     * "Respond with love by:" — 1–2 sentence coaching tip
+   - Cards styled with soft color coding (warm amber, soft blue, soft green)
+   - Button: "I'm Ready. I'll Have the Conversation." → Step 4 (locked/greyed with message: "Come back here after your conversation to reflect.")
+   - Also show a small "Conversation Prep Summary" download-style card:
+     * Intent, Key phrase to use, One thing to remember
+     * Button: "Copy Summary" (copies to clipboard)
+
+5. STEP 4 – REFLECT (card UI)
+   - Heading: "How did it go?"
+   - Subheading: "Reflection is where real growth happens. Take 2 minutes."
+   - Inputs:
+     * "What happened? (briefly)" (textarea)
+     * "What surprised you?" (textarea)
+     * "What are you proud of?" (textarea)
+     * "What would you do differently?" (textarea)
+   - Button: "Get My Growth Insight →"
+   - On submit: POST to /api/reflect → show reflection insight card
+   - Reflection insight card:
+     * "What you did with love:" — affirmation of positive behavior
+     * "Your micro-habit for next time:" — one small, specific behavior change
+     * "Love as a Strategy reminder:" — one short quote/principle from the framework
+   - Confetti animation (pure JS, canvas-based) on completion
+   - Final message: "Every hard conversation you have with love makes the workplace more human. Well done."
+   - Button: "Start a New Conversation" → resets to Step 1
+
+=== BACKEND (app.py + prompts.py) ===
+
+Flask routes:
+- GET / → serve index.html
+- POST /api/clarify → takes {scenario, situation, goal, worry, other_feeling} → returns {reframed_intent, blind_spot, emotional_context}
+- POST /api/draft → takes {draft_text, context from step 1} → returns {coached_version, coaching_notes: [{emoji, note}]}
+- POST /api/anticipate → takes {full context} → returns {reactions: [{type, emoji, they_might, respond_with}]}
+- POST /api/reflect → takes {what_happened, surprise, proud, different, full context} → returns {what_you_did_with_love, micro_habit, love_reminder}
+
+Use Flask session to carry context across steps (store step 1 and 2 data in session).
+
+prompts.py — System prompt for ALL routes:
+"""
+You are EmpathyOS, an AI micro-coach for difficult workplace conversations.
+You are grounded in the "Love as a Strategy" framework, which treats love as a serious business strategy built on:
+- Empathy & Understanding
+- Respect & Psychological Safety
+- Courageous Honesty
+- Shared Purpose & Trust
+- Vulnerability & Openness
+- Accountability with Care
+
+Your role is to:
+1. Help people prepare for difficult conversations with love, courage, and clarity
+2. Never replace the human conversation — only augment the human's ability to show up well
+3. Always prioritize human dignity, mutual respect, and relationship health
+4. Be warm, direct, and practical — not preachy or generic
+5. Give specific, actionable coaching — not vague affirmations
+
+Tone: Warm, wise, direct. Like a trusted coach who believes in both love AND accountability.
+Format: Always return valid JSON matching the exact schema requested.
+"""
+
+Each route has its own user prompt (in prompts.py) that passes the user's inputs and requests a specific JSON schema back.
+
+Error handling:
+- If OpenAI call fails, return a graceful fallback JSON with a warm error message
+- All API responses return JSON with proper HTTP status codes
+
+requirements.txt:
+flask
+openai
+python-dotenv
+flask-session
+
+.env file (user must add their own key):
+OPENAI_API_KEY=your_key_here
+
+=== UX DETAILS ===
+- Store all step data in JS variables (no page reloads — single page app feel)
+- Show a loading spinner (animated heart pulse using CSS) while waiting for API responses
+- Smooth scroll to new content after each API response
+- On mobile: full-width cards, larger tap targets, bottom-fixed CTA buttons
+- Add subtle hover animations on all buttons (scale 1.02, shadow lift)
+- Step progress bar updates smoothly with CSS transition
+
+=== DEMO MODE ===
+Add a "Try Demo" button on the landing page that pre-fills all inputs with a realistic example scenario:
+- Scenario: "Giving tough feedback"
+- Situation: "My teammate has been missing deadlines and it's affecting the whole team. I need to talk to them but I don't want to damage our relationship."
+- Goal: "I want them to understand the impact and commit to a change, while keeping our trust intact."
+- Worry: "They'll get defensive or feel attacked."
+- Other person's feeling: "They might be overwhelmed — they mentioned personal stress last week."
+This lets judges click through the full flow instantly without typing anything.
+
+=== FINAL NOTES ===
+- Keep all JS in script.js (no inline JS in HTML)
+- Keep all styles in style.css (no inline styles)
+- Use fetch() API for all backend calls
+- Make the app feel premium, warm, and human — not like a generic SaaS tool
+- The visual design should feel like it belongs at the intersection of wellness and enterprise software
