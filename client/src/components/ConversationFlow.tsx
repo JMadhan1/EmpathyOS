@@ -42,11 +42,11 @@ const emptyState: ConversationState = {
 
 const demoState: ConversationState = {
   scenario: "Giving tough feedback",
-  situation: "My direct report missed another critical deadline without communicating it early. This delayed the whole project.",
-  goal: "I want them to understand the impact of missing deadlines and commit to better proactive communication when they are falling behind.",
-  worry: "They will get defensive, blame other departments, or feel like I am attacking their competence.",
-  otherFeeling: "They might be overwhelmed with their workload and scared to admit they are struggling.",
-  draftText: "You missed another deadline and it's unacceptable. The whole team is waiting on you. You need to start telling me when you're behind because this can't happen again.",
+  situation: "My direct report, Alex, missed a critical project deadline for the third time this month. This is delaying the entire team's launch.",
+  goal: "I want Alex to take accountability for the delay and agree on a concrete plan to prevent this from happening again, while ensuring they feel supported rather than attacked.",
+  worry: "Alex will feel picked on and potentially shut down or get defensive, which might hurt our working relationship.",
+  otherFeeling: "Alex might be feeling overwhelmed by the workload and perhaps embarrassed about falling behind, leading to avoidance.",
+  draftText: "Alex, your performance is dragging the team down. You've missed three deadlines now and it's unacceptable. We need to fix this immediately or there will be consequences.",
   whatHappened: "", surprise: "", proud: "", different: "",
 };
 
